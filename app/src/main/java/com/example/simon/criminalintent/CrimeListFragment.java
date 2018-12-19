@@ -1,5 +1,8 @@
 package com.example.simon.criminalintent;
 
-public class CrimeListFragment {
-    
+import android.support.v4.app.Fragment;
+
+public class CrimeListFragment extends Fragment {
+
+
 }
