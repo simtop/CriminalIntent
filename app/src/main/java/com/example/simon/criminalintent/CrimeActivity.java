@@ -6,9 +6,17 @@ import android.support.v4.app.Fragment;
 
 import java.util.UUID;
 
+/**
+ * Class not used anymore, replaced for CrimePagerActivity to use ViewPage
+ *
+ *
+ *
+ */
+
+
 public class CrimeActivity extends SingleFragmentActivity {
 
-    public static final String EXTRA_CRIME_ID = "com.example.simon.criminalintent.crime_id";
+    private static final String EXTRA_CRIME_ID = "com.example.simon.criminalintent.crime_id";
 
     public static Intent newIntent(Context package_context, UUID crime_id){
         Intent intent = new Intent(package_context,CrimeActivity.class);
