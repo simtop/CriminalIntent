@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +22,8 @@ public class CrimePagerActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
+    private Button mJumpFirstButton;
+    private Button mJumpLastButton;
 
     public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
@@ -61,5 +65,49 @@ public class CrimePagerActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        mJumpFirstButton = findViewById(R.id.jump_to_first_button);
+        mJumpFirstButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(0);
+            }
+        });
+
+        mJumpLastButton = findViewById(R.id.jump_to_last_button);
+        mJumpLastButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(mCrimes.size()-1);
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0){
+                    mJumpFirstButton.setEnabled(false);
+                    mJumpLastButton.setEnabled(true);
+                }
+                else if(position == mCrimes.size()-1){
+                    mJumpLastButton.setEnabled(false);
+                    mJumpFirstButton.setEnabled(true);
+                }
+                else{
+                    mJumpLastButton.setEnabled(true);
+                    mJumpFirstButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 }
