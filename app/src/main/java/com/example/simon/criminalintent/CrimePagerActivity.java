@@ -39,6 +39,9 @@ public class CrimePagerActivity extends AppCompatActivity {
         mCrimes = CrimeLab.get(this).getCrimes();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentStatePageAdapter destroys fragment when not used to save memory
+        //is usefull when you have many items on a list or many fragments
+        // if you just need 2-3 pages it's beter use FragmentPagerAdapter
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
