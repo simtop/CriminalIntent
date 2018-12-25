@@ -80,13 +80,19 @@ public class CrimeListFragment extends Fragment {
         public void bind (Crime crime){
             mCrime = crime;
             mTitleTextView.setText(crime.getTitle());
-            mDateTextView.setText(getFormattedDate(crime.getDate()));
+            mDateTextView.setText(getFormattedDate());
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
 
-        private String getFormattedDate(Date date) {
+        private String getFormattedDate() {
             SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy", Locale.UK);
-            return formatter.format(date);
+            return formatter.format(mCrime.getDate());
+        }
+        //Not used anymore TODO: Delete
+        private String getFormattedTime (){
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.UK);
+            String crimeTime = formatter.format(mCrime.getTime());
+            return crimeTime;
         }
 
         @Override
