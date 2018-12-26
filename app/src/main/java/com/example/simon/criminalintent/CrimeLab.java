@@ -33,10 +33,13 @@ public class CrimeLab {
             return mCrimes.get(id);
         }
 
-        public void addCrime(Crime c) {
-            mCrimes.put(c.getId(),c);
+        public void addCrime(Crime crime) {
+            mCrimes.put(crime.getId(),crime);
         }
 
 
+    public void removeCrime(Crime crime) {
+            mCrimes.remove(crime.getId());
     }
+}
 
