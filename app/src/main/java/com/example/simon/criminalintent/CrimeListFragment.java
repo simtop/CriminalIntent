@@ -43,7 +43,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_crime_list,menu);
+        inflater.inflate(R.menu.fragment_crime_list, menu);
 
         MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
         if (mSubtitleVisible) {
@@ -95,7 +95,7 @@ public class CrimeListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_crime_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mCrimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -117,7 +117,6 @@ public class CrimeListFragment extends Fragment {
 
         return view;
     }
-
 
 
     @Override
@@ -143,12 +142,11 @@ public class CrimeListFragment extends Fragment {
             mEmptyTextView.setVisibility(View.GONE);
             mAddCrimeButton.setVisibility(View.GONE);
         }
-
-        if(mAdapter == null){
+        
+        if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
-        }
-        else {
+        } else {
             mAdapter.setCrimes(crimes);
             //Deleted because notifyItemChanged can't  work when the item is deleted
             //mAdapter.notifyItemChanged(mClickedItemPosition);
@@ -171,12 +169,12 @@ public class CrimeListFragment extends Fragment {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
 
             mTitleTextView = itemView.findViewById(R.id.crime_title);
-            mDateTextView  = itemView.findViewById(R.id.crime_date);
+            mDateTextView = itemView.findViewById(R.id.crime_date);
             mSolvedImageView = itemView.findViewById(R.id.crime_solved);
             itemView.setOnClickListener(this);
         }
 
-        public void bind (Crime crime){
+        public void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(crime.getTitle());
             mDateTextView.setText(getFormattedDate());
@@ -187,8 +185,9 @@ public class CrimeListFragment extends Fragment {
             SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy", Locale.UK);
             return formatter.format(mCrime.getDate());
         }
+
         //Not used anymore TODO: Delete
-        private String getFormattedTime (){
+        private String getFormattedTime() {
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.UK);
             String crimeTime = formatter.format(mCrime.getTime());
             return crimeTime;
@@ -197,7 +196,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View view) {
             mClickedItemPosition = getAdapterPosition();
-            Intent intent =  CrimePagerActivity.newIntent(getActivity(),mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
     }
@@ -214,7 +213,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new CrimeHolder(layoutInflater,parent);
+            return new CrimeHolder(layoutInflater, parent);
         }
 
         @Override
