@@ -43,7 +43,6 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private Button mTimeButton;
 
 
-
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
@@ -60,82 +59,87 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
+    }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.fragment_crime, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
-            mTitleField = v.findViewById(R.id.crime_title);
-            mTitleField.setText(mCrime.getTitle());
-            mTitleField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        mTitleField = v.findViewById(R.id.crime_title);
+        mTitleField.setText(mCrime.getTitle());
+        mTitleField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+            }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mCrime.setTitle(s.toString());
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mCrime.setTitle(s.toString());
+            }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+            @Override
+            public void afterTextChanged(Editable s) {
 
-                }
-            });
+            }
+        });
 
-            mDateButton = v.findViewById(R.id.crime_date);
-            updateDate();
-            mDateButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager manager = getFragmentManager();
-                    DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-                    dialog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);
-                    dialog.show(manager,DIALOG_DATE);
-                }
-            });
+        mDateButton = v.findViewById(R.id.crime_date);
+        updateDate();
+        mDateButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
 
-            mTimeButton = v.findViewById(R.id.crime_time);
-            updateTime();
-            mTimeButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager manager = getFragmentManager();
-                    TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getTime());
-                    dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
-                    dialog.show(manager, DIALOG_TIME);
+        mTimeButton = v.findViewById(R.id.crime_time);
+        updateTime();
+        mTimeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getTime());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+                dialog.show(manager, DIALOG_TIME);
 
-                }
-            });
+            }
+        });
 
-            mSolvedCheckbox = v.findViewById(R.id.crime_solved);
-            mSolvedCheckbox.setChecked(mCrime.isSolved());
-            mSolvedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
-                    mCrime.setSolved(isChecked);
-                }
-            });
+        mSolvedCheckbox = v.findViewById(R.id.crime_solved);
+        mSolvedCheckbox.setChecked(mCrime.isSolved());
+        mSolvedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                mCrime.setSolved(isChecked);
+            }
+        });
 
-            return v;
-        }
-
+        return v;
+    }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != Activity.RESULT_OK){
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if(requestCode == REQUEST_DATE){
+        if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate();
         }
-        if(requestCode == REQUEST_TIME){
+        if (requestCode == REQUEST_TIME) {
             Date time = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
             mCrime.setTime(time);
             updateTime();
@@ -157,7 +161,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_crime,menu);
+        inflater.inflate(R.menu.fragment_crime, menu);
     }
 
     @Override
