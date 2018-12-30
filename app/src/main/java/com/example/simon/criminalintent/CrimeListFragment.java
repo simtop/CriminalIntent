@@ -187,7 +187,7 @@ public class CrimeListFragment extends Fragment {
             SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy", Locale.UK);
             return formatter.format(mCrime.getDate());
         }
-        //Not used anymore TODO: Delete
+
         private String getFormattedTime (){
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.UK);
             String crimeTime = formatter.format(mCrime.getTime());
@@ -231,6 +231,8 @@ public class CrimeListFragment extends Fragment {
         public void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
+
+
 
         @Override
         public int getItemViewType(int position) {
