@@ -51,7 +51,7 @@ public class Crime {
     public void setSolved(boolean solved) {
         mSolved = solved;
     }
-
+    //TODO: Delete if not going to use
     public boolean isRequiresPolice() {
         return mRequiresPolice;
     }
