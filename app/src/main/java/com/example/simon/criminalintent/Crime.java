@@ -10,7 +10,7 @@ public class Crime {
     private Date mDate;
     private Date mTime;
     private boolean mSolved;
-
+    private String mSuspect;
 
     private boolean mRequiresPolice;
 
@@ -63,6 +63,14 @@ public class Crime {
 
     public Date getTime() {
         return mTime;
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
     }
 
 }
