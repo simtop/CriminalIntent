@@ -1,5 +1,6 @@
 package com.example.simon.criminalintent;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -9,7 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -41,6 +45,8 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private static final int REQUEST_TIME = 1;
 
     private static final int REQUEST_CONTACT = 2;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 3;
+
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -49,6 +55,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private Button mTimeButton;
     private Button mReportButton;
     private Button mSuspectButton;
+    private Button mCallSuspectButton;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -135,15 +142,23 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         mReportButton = v.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_SEND);
+              /*  Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
                 i.putExtra(Intent.EXTRA_SUBJECT,
                         getString(R.string.crime_report_subject));
                 i = Intent.createChooser(i, getString(R.string.send_report));
                 startActivity(i);
+                */
+              //Another way to do the same
 
-                
+                ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setText(getCrimeReport())
+                        .setSubject(getString(R.string.crime_report_subject))
+                        .setChooserTitle(getString(R.string.send_report))
+                        .startChooser();
+
             }
         });
 
@@ -155,9 +170,22 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 startActivityForResult(pickContact, REQUEST_CONTACT);
             }
         });
+
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(mCrime.getSuspect());
         }
+
+        mCallSuspectButton = v.findViewById(R.id.crime_call);
+        mCallSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri number = Uri.parse("tel:" + mCrime.getContactNumber());
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                startActivity(callIntent);
+            }
+        });
+
+
 
         //Checking if OS has a Contact app
         PackageManager packageManager = getActivity().getPackageManager();
@@ -165,6 +193,8 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
         }
+
+        askForContactPermission();
 
         return v;
     }
@@ -185,9 +215,11 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             mCrime.setTime(time);
             updateTime();
         } else if (requestCode == REQUEST_CONTACT && data != null) {
+            long contactId = 0;
             Uri contactUri = data.getData();
             // Specify which fields you want your query to return values for
             String[] queryFields = new String[]{
+                    ContactsContract.Contacts._ID,
                     ContactsContract.Contacts.DISPLAY_NAME
             };
             // Perform your query - the contactUri is like a "where" clause here
@@ -200,12 +232,14 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 }
             // Pull out the first column of the first row of data that is your suspect's name
                 c.moveToFirst();
-                String suspect = c.getString(0);
+                contactId = c.getLong(0);
+                String suspect = c.getString(1);
                 mCrime.setSuspect(suspect);
                 mSuspectButton.setText(suspect);
             } finally {
                 c.close();
             }
+            setSuspectPhoneNumber(contactId);
         }
     }
 
@@ -258,6 +292,40 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void askForContactPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+        }
+    }
+
+    private void setSuspectPhoneNumber(long contactId) {
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        Cursor c = getActivity().getContentResolver().query(
+                uri,
+                null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                new String[] { Long.toString(contactId) },
+                null
+        );
+
+        try {
+            if (c.getCount() == 0) {
+                return;
+            }
+
+            c.moveToFirst();
+            String contactNumber = c.getString(
+                    c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            mCrime.setContactNumber(contactNumber);
+        } finally {
+            c.close();
         }
     }
 }

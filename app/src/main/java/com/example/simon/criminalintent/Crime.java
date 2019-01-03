@@ -11,6 +11,7 @@ public class Crime {
     private Date mTime;
     private boolean mSolved;
     private String mSuspect;
+    private String mContactNumber;
 
     private boolean mRequiresPolice;
 
@@ -76,4 +77,11 @@ public class Crime {
         mSuspect = suspect;
     }
 
+    public String getContactNumber() {
+        return mContactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        mContactNumber = contactNumber;
+    }
 }
