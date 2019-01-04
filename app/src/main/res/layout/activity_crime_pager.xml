@@ -17,21 +17,23 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="8dp">
 
         <Button
             android:id="@+id/jump_to_first_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/jump_to_first"
-            android:layout_margin="16dp"/>
+            android:layout_margin="16dp"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/jump_to_last_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/jump_to_last"
-            android:layout_margin="16dp"/>
+            android:layout_margin="16dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
