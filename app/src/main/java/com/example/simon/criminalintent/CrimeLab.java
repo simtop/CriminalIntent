@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.simon.criminalintent.database.CrimeBaseHelper;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -97,6 +98,11 @@ public class CrimeLab {
         ContentValues values = getContentValues(crime);
 
         mDatabase.insert(CrimeTable.NAME, null, values);
+    }
+
+    public File getPhotoFile(Crime crime) {
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, crime.getPhotoFilename());
     }
 
     public void updateCrime(Crime crime) {
