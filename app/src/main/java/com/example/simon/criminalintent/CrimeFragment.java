@@ -3,6 +3,7 @@ package com.example.simon.criminalintent;
 import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -34,6 +35,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.simon.criminalintent.utils.PictureUtils;
 
@@ -74,6 +76,14 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private ImageView mPhotoView;
 
     private File mPhotoFile;
+    private Callbacks mCallbacks;
+
+    /**
+     * Required interface for hosting activities
+     */
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
+    }
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -81,6 +91,12 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -100,6 +116,17 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
@@ -115,6 +142,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                updateCrime();
             }
 
             @Override
@@ -155,6 +183,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
 
@@ -263,11 +292,14 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
+            //Look order
+            updateCrime();
             updateDate();
         }
         if (requestCode == REQUEST_TIME) {
             Date time = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
             mCrime.setTime(time);
+            updateCrime();
             updateTime();
         } else if (requestCode == REQUEST_CONTACT && data != null) {
             long contactId = 0;
@@ -290,6 +322,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 contactId = c.getLong(0);
                 String suspect = c.getString(1);
                 mCrime.setSuspect(suspect);
+                updateCrime();
                 mSuspectButton.setText(suspect);
             } finally {
                 c.close();
@@ -301,6 +334,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                     mPhotoFile);
             getActivity().revokeUriPermission(uri,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            updateCrime();
             updatePhotoView();
         }
     }
@@ -373,12 +407,27 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_crime:
-                CrimeLab.get(getActivity()).removeCrime(mCrime);
-                getActivity().finish();
+                //CrimeLab.get(getActivity()).removeCrime(mCrime);
+                //getActivity().finish();
+                deleteCrime();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void deleteCrime() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        crimeLab.removeCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+        //Delete photo
+        File file = new File(mPhotoFile.getPath());
+        if (file.exists()) {
+            file.delete();
+        }
+        Toast.makeText(getActivity(), R.string.toast_crime_deleted, Toast.LENGTH_SHORT)
+                .show();
+
     }
 
     private void askForContactPermission() {

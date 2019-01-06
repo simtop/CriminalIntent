@@ -15,7 +15,8 @@ import android.widget.Button;
 import java.util.List;
 import java.util.UUID;
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity
+        implements CrimeFragment.Callbacks {
 
     private static final String EXTRA_CRIME_ID =
             "com.example.simon.criminalintent.crime_id";
@@ -24,6 +25,12 @@ public class CrimePagerActivity extends AppCompatActivity {
     private List<Crime> mCrimes;
     private Button mJumpFirstButton;
     private Button mJumpLastButton;
+
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+    }
+
 
     public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
@@ -78,7 +85,7 @@ public class CrimePagerActivity extends AppCompatActivity {
         mJumpLastButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mViewPager.setCurrentItem(mCrimes.size()-1);
+                mViewPager.setCurrentItem(mCrimes.size() - 1);
             }
         });
 
@@ -90,15 +97,13 @@ public class CrimePagerActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 0){
+                if (position == 0) {
                     mJumpFirstButton.setEnabled(false);
                     mJumpLastButton.setEnabled(true);
-                }
-                else if(position == mCrimes.size()-1){
+                } else if (position == mCrimes.size() - 1) {
                     mJumpLastButton.setEnabled(false);
                     mJumpFirstButton.setEnabled(true);
-                }
-                else{
+                } else {
                     mJumpLastButton.setEnabled(true);
                     mJumpFirstButton.setEnabled(true);
                 }
