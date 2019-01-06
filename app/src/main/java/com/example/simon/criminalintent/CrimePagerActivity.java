@@ -31,6 +31,9 @@ public class CrimePagerActivity extends AppCompatActivity
     public void onCrimeUpdated(Crime crime) {
     }
 
+    @Override
+    public void onCrimeDeleted(Crime crime) {
+    }
 
     public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);

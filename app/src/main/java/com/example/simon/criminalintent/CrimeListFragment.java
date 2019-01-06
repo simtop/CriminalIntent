@@ -152,7 +152,12 @@ public class CrimeListFragment extends Fragment {
      */
     public interface Callbacks {
         void onCrimeSelected(Crime crime);
+        void onCrimeDeleted(Crime crime);
     }
+
+
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -307,10 +312,18 @@ public class CrimeListFragment extends Fragment {
 
         private void notShowCrimeFragment() {
 
-                LinearLayout detailLayout = (LinearLayout) getActivity().
-                        findViewById(R.id.fragment_crime_layout);
-                detailLayout.setVisibility(View.GONE);
+            if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
+            } else {
 
+                List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
+                if (!crimes.isEmpty()) {
+                    mCallbacks.onCrimeDeleted(crimes.get(0));
+                } else {
+                    LinearLayout layout = (LinearLayout) getActivity()
+                            .findViewById(R.id.fragment_crime_layout);
+                    layout.setVisibility(View.GONE);
+                }
+            }
         }
     }
 }

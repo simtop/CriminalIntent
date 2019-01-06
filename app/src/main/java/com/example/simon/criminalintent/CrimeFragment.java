@@ -84,6 +84,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
      */
     public interface Callbacks {
         void onCrimeUpdated(Crime crime);
+        void onCrimeDeleted(Crime crime);
     }
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -434,9 +435,24 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
 
     private void notShowCrimeFragment() {
 
-            LinearLayout detailLayout = (LinearLayout) getActivity().
-                    findViewById(R.id.fragment_crime_layout);
-            detailLayout.setVisibility(View.GONE);
+        if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
+            getActivity().finish();
+        } else {
+            updateCrime();
+
+            List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
+            if (!crimes.isEmpty()) {
+                mCallbacks.onCrimeDeleted(crimes.get(0));
+            } else {
+                LinearLayout layout = (LinearLayout) getActivity()
+                        .findViewById(R.id.fragment_crime_layout);
+                layout.setVisibility(View.GONE);
+            }
+        }
+
+            //LinearLayout detailLayout = (LinearLayout) getActivity().
+             //       findViewById(R.id.fragment_crime_layout);
+            //detailLayout.setVisibility(View.GONE);
 
     }
 
