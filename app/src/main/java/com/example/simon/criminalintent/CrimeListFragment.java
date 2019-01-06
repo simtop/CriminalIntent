@@ -18,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -131,7 +133,7 @@ public class CrimeListFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 if (direction == ItemTouchHelper.RIGHT) {
-                    //mAdapter.swipeToDelete(viewHolder.getAdapterPosition());
+                    mAdapter.swipeToDelete(viewHolder.getAdapterPosition());
                     updateUI();
                 }
             }
@@ -289,6 +291,26 @@ public class CrimeListFragment extends Fragment {
             } else {
                 return R.layout.list_item_crime;
             }
+        }
+
+        public void swipeToDelete(int position) {
+            CrimeLab crimeLab = CrimeLab.get(getActivity());
+            Crime crime = mCrimes.get(position);
+            crimeLab.removeCrime(crime);
+            mAdapter.notifyItemRemoved(position);
+            mAdapter.notifyItemRangeChanged(position, crimeLab.getCrimes().size());
+            Toast.makeText(getContext(), R.string.toast_crime_deleted, Toast.LENGTH_SHORT).show();
+            notShowCrimeFragment();
+
+
+        }
+
+        private void notShowCrimeFragment() {
+
+                LinearLayout detailLayout = (LinearLayout) getActivity().
+                        findViewById(R.id.fragment_crime_layout);
+                detailLayout.setVisibility(View.GONE);
+
         }
     }
 }

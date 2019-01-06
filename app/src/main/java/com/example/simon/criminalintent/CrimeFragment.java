@@ -35,6 +35,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.simon.criminalintent.utils.PictureUtils;
@@ -425,8 +426,17 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         if (file.exists()) {
             file.delete();
         }
+        notShowCrimeFragment();
         Toast.makeText(getActivity(), R.string.toast_crime_deleted, Toast.LENGTH_SHORT)
                 .show();
+
+    }
+
+    private void notShowCrimeFragment() {
+
+            LinearLayout detailLayout = (LinearLayout) getActivity().
+                    findViewById(R.id.fragment_crime_layout);
+            detailLayout.setVisibility(View.GONE);
 
     }
 
