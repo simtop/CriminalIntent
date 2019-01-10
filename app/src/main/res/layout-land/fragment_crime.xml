@@ -23,8 +23,7 @@
             android:background="@android:color/darker_gray"
             android:scaleType="centerInside"
             android:contentDescription="@string/crime_photo_no_image_description"
-            android:cropToPadding="true"
-            android:background="@android:color/darker_gray"/>
+            android:cropToPadding="true"/>
 
         <TextView
             style="?android:listSeparatorTextViewStyle"
