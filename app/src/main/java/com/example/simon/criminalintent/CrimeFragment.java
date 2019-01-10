@@ -342,13 +342,17 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     }
 
     private void updateDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy", Locale.UK);
+        Locale locale = getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy");
         String crimeDate = formatter.format(mCrime.getDate());
         mDateButton.setText(crimeDate);
     }
 
     private void updateTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.UK);
+        Locale locale = getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         String crimeTime = formatter.format(mCrime.getTime());
         mTimeButton.setText(crimeTime);
     }
@@ -377,6 +381,8 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            //Improvement for accessibility
+            mPhotoView.setContentDescription( getString(R.string.crime_photo_no_image_description));
         } else {
             ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -388,6 +394,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                             //mPhotoFile.getPath(),getActivity()); is the crude way to do it
                             mPhotoFile.getPath(), width, height);
                     mPhotoView.setImageBitmap(bitmap);
+                    mPhotoView.setContentDescription( getString(R.string.crime_photo_image_description));
                 }
             });
            /* THIS IS THE CRUDE WAY TO DO IT WITHOUT VIEWTREEOBSERVER

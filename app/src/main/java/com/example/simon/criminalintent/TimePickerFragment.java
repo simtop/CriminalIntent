@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TimePickerFragment extends DialogFragment {
 
@@ -28,6 +29,9 @@ public class TimePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final Date time = (Date) getArguments().getSerializable(ARG_TIME);
+
+        Locale locale = getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
 
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -235,12 +236,16 @@ public class CrimeListFragment extends Fragment {
         }
 
         private String getFormattedDate() {
-            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy", Locale.UK);
+            Locale locale = getResources().getConfiguration().locale;
+            Locale.setDefault(locale);
+            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM d, yyyy");
             return formatter.format(mCrime.getDate());
         }
 
         private String getFormattedTime (){
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.UK);
+            Locale locale = getResources().getConfiguration().locale;
+            Locale.setDefault(locale);
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
             String crimeTime = formatter.format(mCrime.getTime());
             return crimeTime;
         }
@@ -302,6 +307,11 @@ public class CrimeListFragment extends Fragment {
             CrimeLab crimeLab = CrimeLab.get(getActivity());
             Crime crime = mCrimes.get(position);
             crimeLab.removeCrime(crime);
+            File photoFile = CrimeLab.get(getActivity()).getPhotoFile(crime);
+            File file = new File(photoFile.getPath());
+            if (file.exists()) {
+                file.delete();
+            }
             mAdapter.notifyItemRemoved(position);
             mAdapter.notifyItemRangeChanged(position, crimeLab.getCrimes().size());
             Toast.makeText(getContext(), R.string.toast_crime_deleted, Toast.LENGTH_SHORT).show();

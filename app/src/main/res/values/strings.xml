@@ -13,7 +13,7 @@
     <string name="show_subtitle">Show Subtitle</string>
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle_format">%1$d crimes</string>
-    <string name="delete_crime">New Crime</string>
+    <string name="delete_crime">Delete Crime</string>
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d crime</item>
         <item quantity="other">%1$d crimes</item>
@@ -32,4 +32,7 @@
     <string name="send_report">Send crime report via</string>
     <string name="crime_call_suspect">Call Suspect</string>
     <string name="toast_crime_deleted">Crime delted Successfully</string>
+    <string name="crime_photo_button_description">Take photo of crime scene</string>
+    <string name="crime_photo_no_image_description"> Crime scene photo (not set)</string>
+    <string name="crime_photo_image_description">Crime scene photo (set)</string>
 </resources>

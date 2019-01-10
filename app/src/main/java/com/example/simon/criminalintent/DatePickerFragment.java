@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class DatePickerFragment extends DialogFragment {
 
@@ -29,6 +30,9 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
+
+        Locale locale = getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
